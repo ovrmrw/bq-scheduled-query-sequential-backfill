@@ -3,7 +3,7 @@ const { format, addDays } = require("date-fns");
 const bigqueryDataTransfer = require("@google-cloud/bigquery-data-transfer");
 const client = new bigqueryDataTransfer.v1.DataTransferServiceClient();
 
-const [, , _name = "", _start = "", _end = "", _timeZone = "", _sequential = ""] = process.argv;
+const [, , _name = "", _start = "", _end = "", _timeZone = "", _sequential = "1"] = process.argv;
 const name = _name;
 const startDate = _start;
 const endDate = _end;
