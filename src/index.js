@@ -3,17 +3,17 @@ const { format, addDays } = require("date-fns");
 const bigqueryDataTransfer = require("@google-cloud/bigquery-data-transfer");
 const client = new bigqueryDataTransfer.v1.DataTransferServiceClient();
 
-const [, , _name = "", _start = "", _end = "", _timeZone = "", _sequential = "1"] = process.argv;
+const [, , _name = "", _start = "", _end = "", _timeZone = "utc", _sequential = "1"] = process.argv;
 const name = _name;
 const startDate = _start;
 const endDate = _end;
 const timeZone = _timeZone.toUpperCase() || "UTC";
 const sequential = _sequential === "1";
 const location = "us-central1";
-assert(/^.+$/.test(name), `"scheduledQueryName" is required`);
-assert(/^\d{4}-\d{2}-\d{2}$/.test(startDate), `"startDate" must be formatted as yyyy-MM-dd`);
-assert(/^\d{4}-\d{2}-\d{2}$/.test(endDate), `"endDate" must be formatted as yyyy-MM-dd`);
-assert(/^UTC([+-]\d+)?$/.test(timeZone), `"timeZone" must be formatted as "UTC" or "UTC+{hour}" or "UTC-{hour}"`);
+assert(/^.+$/.test(name), `"scheduled_query_name" is required`);
+assert(/^\d{4}-\d{2}-\d{2}$/.test(startDate), `"start_date" must be formatted as yyyy-MM-dd`);
+assert(/^\d{4}-\d{2}-\d{2}$/.test(endDate), `"end_date" must be formatted as yyyy-MM-dd`);
+assert(/^UTC([+-]\d+)?$/.test(timeZone), `"time_zone" must be formatted as "UTC" or "UTC+{hour}" or "UTC-{hour}"`);
 assert(/^[01]?$/.test(_sequential), `"sequential" must be 0 or 1 or undefined`);
 
 async function main() {
@@ -66,7 +66,7 @@ async function main() {
       result = _result;
       if (result.state === "SUCCEEDED") {
         break;
-      } else if (result.state === "FAILED" || result.state === "CANCELLED") {
+      } else if (result.state === "FAILED" || result.state === "CANCELED") {
         console.error(result);
         throw new Error(`State: ${result.state}`);
       }
